@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-04-24T14:48:44Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Check Valids Days SSL</template>
+            <name>Template Check Valids Days SSL</name>
+            <description>Check how many days days that left for the SSL Certificate expire.</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>SSL Check</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Days left to expire SSL Certificate on &quot;your site&quot;</name>
+                    <type>ZABBIX_ACTIVE</type>
+                    <key>checkssl[kluh.com.br]</key>
+                    <delay>1d</delay>
+                    <units>Days</units>
+                    <description>Check and return how many days left for ssl certificate to expiry.</description>
+                    <applications>
+                        <application>
+                            <name>SSL Check</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&lt;=7</expression>
+                            <name>Left 7 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                            <priority>DISASTER</priority>
+                        </trigger>
+                        <trigger>
+                            <expression>{last()}&lt;=14</expression>
+                            <name>Left 14 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                            <priority>DISASTER</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>Left 7 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                                    <expression>{Template Check Valids Days SSL:checkssl[kluh.com.br].last()}&lt;=7</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                        <trigger>
+                            <expression>{last()}&lt;=30</expression>
+                            <name>Left 30 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                            <priority>HIGH</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>Left 14 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                                    <expression>{Template Check Valids Days SSL:checkssl[kluh.com.br].last()}&lt;=14</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                        <trigger>
+                            <expression>{last()}&lt;=60</expression>
+                            <name>Left 60 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                            <priority>AVERAGE</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>Left 30 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                                    <expression>{Template Check Valids Days SSL:checkssl[kluh.com.br].last()}&lt;=30</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                        <trigger>
+                            <expression>{last()}&lt;=90</expression>
+                            <name>Left 90 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                            <priority>WARNING</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>Left 60 days to SSL Certificate expiry on {ITEM.NAME}</name>
+                                    <expression>{Template Check Valids Days SSL:checkssl[kluh.com.br].last()}&lt;=60</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+        </template>
+    </templates>
+</zabbix_export>
